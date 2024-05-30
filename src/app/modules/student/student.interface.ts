@@ -24,8 +24,8 @@ export type TLocalGuardian = {
 
 export type TStudent = {
   id: string;
-  user:Types.ObjectId;
-  password:string;
+  user: Types.ObjectId;
+  password: string;
   name: TUserName;
   gender: 'male' | 'female';
   dateOfBirth?: Date;
@@ -38,8 +38,8 @@ export type TStudent = {
   guardian: TGuardian;
   localGuardian: TLocalGuardian;
   profileImg?: string;
+  admissionSemester:Types.ObjectId;
   isDeleted: boolean;
-  
 };
 
 // custom static instance method
