@@ -1,7 +1,7 @@
 import { AcademicFacultyModel } from './academicFaculty.model';
 import { TAcademicFaculty } from './academicFaculty.interface';
 
-const CreateAcademicFaculty = async (payload: TAcademicFaculty) => {
+const createAcademicFaculty = async (payload: TAcademicFaculty) => {
   const result = await AcademicFacultyModel.create(payload);
   return result;
 };
@@ -29,7 +29,7 @@ const getSingleAcademicFaculty = async (semesterId: string) => {
 };
 
 export const AcademicFacultyServices = {
-  CreateAcademicFaculty,
+  createAcademicFaculty,
   getAllAcademicFaculties,
   getSingleAcademicFaculty,
   updateAcademicFaculty,

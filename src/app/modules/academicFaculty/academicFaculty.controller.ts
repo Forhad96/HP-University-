@@ -5,7 +5,7 @@ import { AcademicFacultyServices } from './academicFaculty.service';
 import sendResponse from '../../utils/sendResponse';
 
 const handleCreateAcademicFaculty = catchAsync(async (req, res) => {
-  const result = await AcademicFacultyServices.CreateAcademicFaculty(req.body);
+  const result = await AcademicFacultyServices.createAcademicFaculty(req.body);
 
   // sent response
   sendResponse(res, {

@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { AcademicSemesterCode, AcademicSemesterName, Months } from "./academicSemester.constant";
 
-const CreateAcademicSemesterValidationSchema = z.object({
+const createAcademicSemesterValidationSchema = z.object({
   body: z.object({
     name: z.enum(AcademicSemesterName as [string, ...string[]]),
     code: z.enum(AcademicSemesterCode as [string, ...string[]]),
@@ -12,7 +12,7 @@ const CreateAcademicSemesterValidationSchema = z.object({
 });
 
 
-const UpdateAcademicSemesterValidationSchema = z.object({
+const updateAcademicSemesterValidationSchema = z.object({
   body: z.object({
     name: z.enum(AcademicSemesterName as [string, ...string[]]).optional(),
     code: z.enum(AcademicSemesterCode as [string, ...string[]]).optional(),
@@ -23,7 +23,7 @@ const UpdateAcademicSemesterValidationSchema = z.object({
 });
 
 
-export const academicSemesterValidations ={
-CreateAcademicSemesterValidationSchema,
-UpdateAcademicSemesterValidationSchema,
+export const AcademicSemesterValidations ={
+createAcademicSemesterValidationSchema,
+updateAcademicSemesterValidationSchema,
 }
