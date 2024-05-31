@@ -18,12 +18,12 @@ router.post(
 router.get('/', AcademicFacultyController.handleGetAllAcademicFaculties);
 
 router.get(
-  '/:semesterId',
+  '/:facultyId',
   AcademicFacultyController.handleGetSingleAcademicFaculty,
 );
 
 router.patch(
-  '/:semesterId',
+  '/:facultyId',
   validateRequest(
     FacultyValidation.UpdateAcademicFacultyValidationSchema,
   ),

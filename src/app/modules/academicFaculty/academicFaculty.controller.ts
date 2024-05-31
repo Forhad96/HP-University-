@@ -28,9 +28,9 @@ const handleGetAllAcademicFaculties = catchAsync(async (req, res) => {
 });
 
 const handleGetSingleAcademicFaculty = catchAsync(async (req, res) => {
-  const { semesterId } = req.params;
+  const { facultyId } = req.params;
   const result =
-    await AcademicFacultyServices.getSingleAcademicFaculty(semesterId);
+    await AcademicFacultyServices.getSingleAcademicFaculty(facultyId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -41,17 +41,17 @@ const handleGetSingleAcademicFaculty = catchAsync(async (req, res) => {
 });
 
 const handleUpdateSingleAcademicFaculty = catchAsync(async (req, res) => {
-  const { semesterId } = req.params;
+  const { facultyId } = req.params;
   const updatedData = req.body;
   const result = await AcademicFacultyServices.updateAcademicFaculty(
-    semesterId,
+    facultyId,
     updatedData,
   );
   console.log(result);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Single academic semester updated successfully',
+    message: 'Single academic Faculty updated successfully',
     data: result,
   });
 });
