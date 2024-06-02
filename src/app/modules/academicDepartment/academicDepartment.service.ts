@@ -10,12 +10,19 @@ const getAllAcademicDepartment = async () => {
   const result = await AcademicDepartmentModel.find();
   return result;
 };
-const getSingleAcademicDepartment = async (departmentId:string) => {
+const getSingleAcademicDepartment = async (departmentId: string) => {
   const result = await AcademicDepartmentModel.findById(departmentId);
   return result;
 };
-const updateAcademicDepartment = async (departmentId:string,payload:TAcademicDepartment) => {
-  const result = await AcademicDepartmentModel.findByIdAndUpdate(departmentId,payload,{new:true});
+const updateAcademicDepartment = async (
+  departmentId: string,
+  payload: TAcademicDepartment,
+) => {
+  const result = await AcademicDepartmentModel.findByIdAndUpdate(
+    departmentId,
+    payload,
+    { new: true },
+  );
   return result;
 };
 
