@@ -13,7 +13,7 @@ const moduleRoutes = [
     routes: UserRoutes,
   },
   {
-    path: '/users',
+    path: '/students',
     routes: studentRoutes,
   },
   {

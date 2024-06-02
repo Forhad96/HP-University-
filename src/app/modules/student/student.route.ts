@@ -9,6 +9,7 @@ const router  = express.Router()
 
 // get all student 
 router.get('/',StudentControllers.handleGetAllStudents)
+router.get('/:studentId',StudentControllers.handleGetSingleStudent)
 
 
 

@@ -11,4 +11,5 @@ router.post(
   UserController.handleCreateStudent,
 );
 
+
 export const UserRoutes = router;

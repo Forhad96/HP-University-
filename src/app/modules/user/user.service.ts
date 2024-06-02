@@ -19,7 +19,7 @@ const createStudent = async (password: string, payload: TStudent) => {
 
   //find academic semester information
   const academicSemester = await academicSemesterModel.findById(
-    payload.admissionSemester,
+    payload.academicSemester,
   );
 
   if (!academicSemester) {
