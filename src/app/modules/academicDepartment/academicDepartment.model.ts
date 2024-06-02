@@ -1,5 +1,7 @@
 import { Schema, model } from 'mongoose';
 import { TAcademicDepartment } from './academicDepartment.interface';
+import AppError from '../../errors/AppError';
+import httpStatus from 'http-status';
 
 const AcademicDepartmentSchema = new Schema<TAcademicDepartment>(
   {
@@ -17,6 +19,8 @@ const AcademicDepartmentSchema = new Schema<TAcademicDepartment>(
   { timestamps: true },
 );
 
+
+
 /**
  * Pre-save middleware for AcademicDepartmentSchema.
  * Checks if a department with the same name already exists in the database before saving a new department.
@@ -28,7 +32,7 @@ AcademicDepartmentSchema.pre('save', async function (next) {
   const isDepartmentExist = await AcademicDepartmentModel.findOne({
     name: this.name,
   });
-  if (isDepartmentExist) throw new Error('This Department already exist');
+  if (isDepartmentExist) throw new AppError(httpStatus.NOT_FOUND,'This Department already exist');
   next();
 });
 
@@ -38,7 +42,7 @@ AcademicDepartmentSchema.pre('findOneAndUpdate', async function (next) {
   const isDepartmentExist =
     await AcademicDepartmentModel.findById(departmentId);
   if (!isDepartmentExist) {
-    throw new Error('This Department dose not exist');
+    throw new AppError(httpStatus.NOT_FOUND,'This Department dose not exist');
   }
 
   next();
