@@ -5,7 +5,8 @@ import { AcademicDepartmentController } from "./academicDepartment.controller";
 
 const router = Router()
 
-router.post("/create-academic-department",validateRequest(AcademicDepartmentValidations.createAcademicDepartmentValidationSchema),AcademicDepartmentController.handleCreateAcademicDepartment)
+router.post("/create-academic-department",
+AcademicDepartmentController.handleCreateAcademicDepartment)
 
 
 router.get("/",AcademicDepartmentController.handleGetAllAcademicDepartment)
