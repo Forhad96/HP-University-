@@ -9,11 +9,10 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   // setting default values
   let statusCode = err.statusCode || 500;
   let message = err.message || 'Something went wrong!';
-
   let errorSource: TErrorSource = [
     {
       path: '',
-      message: 'some thing went wrong',
+      message: 'something went wrong',
     },
   ];
 
@@ -29,6 +28,9 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     message = simplifiedError?.message;
     errorSource = simplifiedError.errorSource;
   }
+
+
+
   return res.status(statusCode).json({
     success: false,
     message,

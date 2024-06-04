@@ -5,7 +5,7 @@ import { AcademicDepartmentController } from "./academicDepartment.controller";
 
 const router = Router()
 
-router.post("/create-academic-department",
+router.post("/create-academic-department", validateRequest(AcademicDepartmentValidations.createAcademicDepartmentValidationSchema),
 AcademicDepartmentController.handleCreateAcademicDepartment)
 
 
