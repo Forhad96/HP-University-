@@ -16,16 +16,19 @@ app.use(cors());
 app.use('/api/v1',router)
 
 
-
 /**
  * Handles GET requests to the root endpoint.
  *
  * @param req - The request object.
  * @param res - The response object.
  */
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello World!');
-});
+const test = async (req: Request, res: Response) => {
+  const a = 10;
+  res.send(a);
+  // Promise.reject()
+};
+
+app.get('/', test);
 
 app.use(globalErrorHandler)
 app.use(notFound)

@@ -28,13 +28,13 @@ const AcademicDepartmentSchema = new Schema<TAcademicDepartment>(
  *
  * @param {Function} next - The next middleware function in the stack.
  */
-// AcademicDepartmentSchema.pre('save', async function (next) {
-//   const isDepartmentExist = await AcademicDepartmentModel.findOne({
-//     name: this.name,
-//   });
-//   if (isDepartmentExist) throw new AppError(httpStatus.NOT_FOUND,'This Department already exist');
-//   next();
-// });
+AcademicDepartmentSchema.pre('save', async function (next) {
+  const isDepartmentExist = await AcademicDepartmentModel.findOne({
+    name: this.name,
+  });
+  if (isDepartmentExist) throw new AppError(httpStatus.NOT_FOUND,'This Department already exist');
+  next();
+});
 
 AcademicDepartmentSchema.pre('findOneAndUpdate', async function (next) {
   const departmentId = this.getQuery();
