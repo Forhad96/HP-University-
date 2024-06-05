@@ -21,13 +21,12 @@ const getAllStudents = async (query: Record<string, unknown>) => {
     })),
   });
   //filtering functionality
-  const excludeFields = ['searchTerm',"sort"];
+  const excludeFields = ['searchTerm', 'sort',"page","limit"];
   excludeFields.forEach(el => delete queryObj[el]);
 
-  
   console.log('base', query);
   console.log('copy', queryObj);
-  const filterQuery =  searchQuery
+  const filterQuery = searchQuery
     .find(queryObj)
     .populate('academicSemester')
     .populate({
@@ -44,17 +43,31 @@ const getAllStudents = async (query: Record<string, unknown>) => {
   if (query.sort) {
     sort = query.sort as string;
   }
-  console.log(sort);
+  const sortQuery = filterQuery.sort(sort);
 
-  const sortQuery = await filterQuery.sort(sort);
+  // PAGINATION FUNCTIONALITY:
 
+  let page = 1; // SET DEFAULT VALUE FOR PAGE
+  let limit = 1; // SET DEFAULT VALUE FOR LIMIT
+  let skip = 0; // SET DEFAULT VALUE FOR SKIP
+
+  if (query.limit) {
+    limit = Number(query.limit);
+  }
+  if (query.page) {
+    page = Number(query.page);
+    skip = (page - 1) * limit;
+  }
+
+  const paginateQuery = sortQuery.skip(skip);
+  const limitQuery = await paginateQuery.limit(limit);
   // const result = await StudentModel.find()
   //   .populate('academicSemester')
   //   .populate({
   //     path: 'academicDepartment',
   //     populate: 'academicFaculty',
   //   });
-  return sortQuery;
+  return limitQuery;
 };
 
 const getSingleStudent = async (id: string) => {
