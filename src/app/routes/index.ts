@@ -4,36 +4,42 @@ import { UserRoutes } from '../modules/user/user.routes';
 import { AcademicSemesterRoutes } from '../modules/academicSemester/academicSemester.routes';
 import { AcademicFacultyRoutes } from '../modules/academicFaculty/academicFaculty.routes';
 import { academicDepartmentRoutes } from '../modules/academicDepartment/academicDepartment.routes';
+import { FacultyRoutes } from '../modules/Faculty/faculty.routes';
+import { CourseRoutes } from '../modules/Course/course.routes';
 
 const router = Router();
 
 const moduleRoutes = [
   {
     path: '/users',
-    routes: UserRoutes,
+    route: UserRoutes,
   },
   {
     path: '/students',
-    routes: studentRoutes,
+    route: studentRoutes,
   },
   {
     path: '/academic-semester',
-    routes: AcademicSemesterRoutes,
+    route: AcademicSemesterRoutes,
   },
   {
     path: '/academic-faculties',
-    routes: AcademicFacultyRoutes,
+    route: AcademicFacultyRoutes,
   },
   {
     path: '/academic-departments',
-    routes: academicDepartmentRoutes,
+    route: academicDepartmentRoutes,
+  },
+  {
+    path: '/faculties',
+    route: FacultyRoutes,
+  },
+  {
+    path: '/courses',
+    route: CourseRoutes,
   },
 ];
 
-/**
- * Iterates over each route in moduleRoutes and registers it with the router.
- * @param {Array} moduleRoutes - An array of route objects that each contain a path and routes.
- */
-moduleRoutes.forEach(route => router.use(route.path, route.routes));
+moduleRoutes.forEach(route => router.use(route.path, route.route));
 
 export default router;
