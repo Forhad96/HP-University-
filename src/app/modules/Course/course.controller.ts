@@ -60,11 +60,45 @@ const handleDeleteCourse = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const handleAssignFacultiesWithCourse = catchAsync(async (req, res) => {
+  const { courseId } = req.params;
+  const { faculties } = req.body;
 
+  const result = await CourseServices.assignFacultiesWithCourse(
+    courseId,
+    faculties,
+  );
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Faculties assigned  successfully',
+    data: result,
+  });
+});
+
+const handleRemoveFacultiesFromCourse = catchAsync(async (req, res) => {
+  const { courseId } = req.params;
+  const { faculties } = req.body;
+
+  const result = await CourseServices.removeFacultiesFromCourse(
+    courseId,
+    faculties,
+  );
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Faculties removed  succesfully',
+    data: result,
+  });
+});
 export const CourseControllers = {
     handleCreateCourse,
     handleGetAllCourses,
     handleGetSingleCourse,
     handleUpdateCourse,
     handleDeleteCourse,
+    handleAssignFacultiesWithCourse,
+    handleRemoveFacultiesFromCourse
 }

@@ -1,16 +1,14 @@
 import { Router } from 'express';
 import validateRequest from '../../middleware/validateRequest';
-import { FacultyValidation } from './academicFaculty.validation';
+import { AcademicFacultyValidation } from './academicFaculty.validation';
 import { AcademicFacultyController } from './academicFaculty.controller';
-
-
 
 const router = Router();
 
 router.post(
   '/create-academic-faculty',
   validateRequest(
-    FacultyValidation.createAcademicFacultyValidationSchema,
+    AcademicFacultyValidation.createAcademicFacultyValidationSchema,
   ),
   AcademicFacultyController.handleCreateAcademicFaculty,
 );
@@ -25,7 +23,7 @@ router.get(
 router.patch(
   '/:facultyId',
   validateRequest(
-    FacultyValidation.updateAcademicFacultyValidationSchema,
+    AcademicFacultyValidation.updateAcademicFacultyValidationSchema,
   ),
   AcademicFacultyController.handleUpdateSingleAcademicFaculty,
 );
