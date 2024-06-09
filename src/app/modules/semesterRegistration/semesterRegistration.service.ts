@@ -71,7 +71,57 @@ const getSingleSemesterRegistration = async (id: string) => {
 const updateSemesterRegistration = async (
   id: string,
   payload: TSemesterRegistration,
-) => {};
+) => {
+  /**
+   * Step1: Check if the semester is exist
+   * Step2: Check if the requested registered semester is exists
+   * Step3: If the requested semester registration is ended, we will not update anything
+   * Step4: If the requested semester registration is 'UPCOMING', we will let update everything.
+   * Step5: If the requested semester registration is 'ONGOING', we will not update anything  except status to 'ENDED'
+   * Step6: If the requested semester registration is 'ENDED' , we will not update anything
+   *
+   * UPCOMING --> ONGOING --> ENDED
+   *
+   */
+  // check if semester exist
+  // check if the requested registered semester is exists
+  const isSemesterRegistrationExist =
+    await SemesterRegistrationModel.findById(id);
+  if (!isSemesterRegistrationExist) {
+    throw new AppError(httpStatus.NOT_FOUND, 'This semester is not found');
+  }
+  //If the requested semester registration is end,will not update anything
+  const currentSemesterStatus = isSemesterRegistrationExist?.status;
+  const requestedStatus = payload.status;
+
+  if (currentSemesterStatus === 'ENDED') {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      `This semester is already ${isSemesterRegistrationExist?.status}`,
+    );
+  }
+
+  // UPCOMING --> ONGOING --> ENDED
+  if (currentSemesterStatus === 'UPCOMING' && requestedStatus === 'ENDED')
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      `You can not directly change status from ${currentSemesterStatus} to ${requestedStatus}`,
+    );
+
+  if (currentSemesterStatus === 'ONGOING' && requestedStatus === 'UPCOMING') {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      `You can not directly change status from ${currentSemesterStatus} to ${requestedStatus}`,
+    );
+  }
+  const result = await SemesterRegistrationModel.findByIdAndUpdate(
+    id,
+    payload,
+    { new: true, runValidators: true },
+  );
+
+  return result;
+};
 
 const deleteSemesterRegistration = async (id: string) => {};
 
