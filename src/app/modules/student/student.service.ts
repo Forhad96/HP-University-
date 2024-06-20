@@ -4,7 +4,6 @@ import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
 import { UserModel } from '../user/user.model';
 import { TStudent } from './student.interface';
-import { query } from 'express';
 import QueryBuilder from '../../builder/QueryBuilder';
 import { studentSearchableFields } from './student.constant';
 
@@ -101,7 +100,7 @@ const getAllStudents = async (query: Record<string, unknown>) => {
 };
 
 const getSingleStudent = async (id: string) => {
-  const result = await StudentModel.findOne({ id })
+  const result = await StudentModel.findOne({ id }).populate("user")
     .populate('academicSemester')
     .populate({
       path: 'academicDepartment',

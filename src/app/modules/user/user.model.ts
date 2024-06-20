@@ -17,6 +17,9 @@ const userSchema = new Schema<TUser, UserStaticModel>(
       type: Boolean,
       default: true,
     },
+    passwordChangedAt: {
+      type: Date,
+    },
     role: {
       type: String,
       enum: ['student', 'faculty', 'admin'],
@@ -54,13 +57,22 @@ userSchema.post('save', function (doc, next) {
 });
 
 userSchema.statics.isUserExisTByCustomId = async function (id: string) {
-  return await UserModel.findOne({ id }).select("+password");
+  return await UserModel.findOne({ id }).select('+password');
 };
 userSchema.statics.isPasswordMatched = async function (
   plainTextPassword: string,
   hashedPassword: string,
 ) {
   return await bcrypt.compare(plainTextPassword, hashedPassword);
+};
+
+userSchema.statics.isJWTIssuedBeforePasswordChanged = function (
+  passwordChangedTimeStamp,
+  jwtIssuedTimeStamp,
+) {
+const passwordChangedTime = new Date(passwordChangedTimeStamp).getTime()/1000
+
+  return passwordChangedTime > jwtIssuedTimeStamp;
 };
 
 // Exclude password from the JSON output
