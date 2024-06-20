@@ -12,6 +12,7 @@ router.post("/login",validateRequest(AuthValidation.loginValidationSchema),AuthC
 
 router.post('/change-password',auth(USER_ROLES.admin,USER_ROLES.student,USER_ROLES.faculty) ,validateRequest(AuthValidation.changePasswordValidationSchema),AuthControllers.handleChangePassword)
 
+router.post("/refresh-token",validateRequest(AuthValidation.refreshTokenValidationSchema),AuthControllers.handleRefreshToken)
 router.get("/")
 
 

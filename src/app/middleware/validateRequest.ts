@@ -12,6 +12,7 @@ const validateRequest = (schema: AnyZodObject) => {
       // Validate the request body against the schema and proceed if successful
       await schema.parseAsync({
         body: req.body,
+        cookies:req.cookies,
       });
       next();
     } catch (error) {
