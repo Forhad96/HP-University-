@@ -114,10 +114,14 @@ const createFaculty = async (password: string, payload: TFaculty) => {
     await session.endSession();
 
     return newFaculty;
-  } catch (err: any) {
+  } catch (err: unknown) {
     await session.abortTransaction();
     await session.endSession();
-    throw new Error(err);
+    if (err instanceof Error) {
+      throw err;
+    } else {
+      throw new Error('An unknown error occurred');
+    }
   }
 };
 
@@ -155,10 +159,14 @@ const createAdmin = async (password: string, payload: TFaculty) => {
     await session.commitTransaction();
     await session.endSession();
     return newAdmin;
-  } catch (err: any) {
+  } catch (err: unknown) {
     await session.abortTransaction();
     await session.endSession();
-    throw new Error(err);
+    if (err instanceof Error) {
+      throw err;
+    } else {
+      throw new Error('An unknown error occurred');
+    }
   }
 };
 export const UserServices = {
