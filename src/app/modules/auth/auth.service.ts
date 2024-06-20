@@ -2,9 +2,10 @@ import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
 import { UserModel } from '../user/user.model';
 import { TLoginUser } from './auth.interface';
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import  { JwtPayload } from 'jsonwebtoken';
 import config from '../../config';
 import bcrypt from 'bcrypt';
+import { createToken } from './auth.utils';
 const loginUser = async (payload: TLoginUser) => {
   // checking if the user is exist
   const user = await UserModel.isUserExisTByCustomId(payload?.id);
@@ -38,13 +39,10 @@ const loginUser = async (payload: TLoginUser) => {
     role: user?.role,
   };
 
-  const accessToken = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
-    expiresIn: config.jwt_access_expired_in as string,
-  });
-
-  //   console.log(payload);
-  //   const result = UserModel.find();
-  return { accessToken, needsPasswordChange: user.needsPasswordChange };
+  const accessToken = createToken(jwtPayload,config.jwt_access_secret as string,config.jwt_access_expired_in as string)
+  const refreshToken = createToken(jwtPayload,config.jwt_refresh_secret as string,config.jwt_refresh_expired_in as string)
+console.log(accessToken,refreshToken);
+  return { accessToken,refreshToken, needsPasswordChange: user.needsPasswordChange };
 };
 
 const changePassword = async (
