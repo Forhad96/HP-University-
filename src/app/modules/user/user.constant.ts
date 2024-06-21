@@ -8,3 +8,4 @@ export const USER_ROLES = {
 
 
 
+export const UserStatus = ['in-progress', 'blocked'] 

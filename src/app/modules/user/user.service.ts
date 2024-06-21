@@ -16,7 +16,6 @@ import { TFaculty } from '../Faculty/faculty.interface';
 import { AcademicDepartmentModel } from '../academicDepartment/academicDepartment.model';
 import { FacultyModel } from '../Faculty/faculty.model';
 import { AdminModel } from '../Admin/admin.model';
-import { verifyToken } from '../auth/auth.utils';
 
 const createStudent = async (password: string, payload: TStudent) => {
   // create a user object
@@ -193,9 +192,18 @@ if (role === 'faculty') {
 
 return result;
 };
+
+const changeStatus = async (userId:string ,payload:{status:string})=>{
+  console.log(userId,payload);
+  const result = await UserModel.findByIdAndUpdate(userId, payload, {
+    new: true,
+  });
+  return result;
+}
 export const UserServices = {
   createStudent,
   createFaculty,
   createAdmin,
-  getMe
+  getMe,
+  changeStatus
 };
