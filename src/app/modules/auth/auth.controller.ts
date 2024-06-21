@@ -41,7 +41,17 @@ const handleRefreshToken = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Access token is retrieved succesfully!',
+    message: 'Access token is retrieved successfully!',
+    data: result,
+  });
+});
+const handleForgotPassword = catchAsync(async (req, res) => {
+  const result = await AuthServices.forgotPassword(req.body.id)
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Access token is retrieved successfully!',
     data: result,
   });
 });
@@ -50,4 +60,5 @@ export const AuthControllers = {
   handleLoginUser,
   handleChangePassword,
   handleRefreshToken,
+  handleForgotPassword,
 };
