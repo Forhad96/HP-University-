@@ -7,6 +7,7 @@ import config from '../../config';
 import bcrypt from 'bcrypt';
 import { createToken } from './auth.utils';
 import jwt from 'jsonwebtoken';
+import { sendEmail } from '../../utils/sendEmail';
 
 const loginUser = async (payload: TLoginUser) => {
   // checking if the user is exist
@@ -164,47 +165,86 @@ const refreshToken = async (token: string) => {
   };
 };
 
-const forgotPassword = async(userId: string) => {
+const forgotPassword = async (userId: string) => {
+  const user = await UserModel.isUserExisTByCustomId(userId);
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'This user is not exist');
+  }
 
-const user = await UserModel.isUserExisTByCustomId(userId);
-if (!user) {
-  throw new AppError(httpStatus.NOT_FOUND, 'This user is not exist');
-}
-
-//checking if the user is already deleted
-const isDeleted = user?.isDeleted;
-if (isDeleted) {
-  throw new AppError(httpStatus.FORBIDDEN, 'This user is deleted');
-}
-//checking if the user is blocked
-const userStatus = user?.status;
-if (userStatus === 'blocked') {
-  throw new AppError(httpStatus.FORBIDDEN, 'This user is Blocked');
-}
-
+  //checking if the user is already deleted
+  const isDeleted = user?.isDeleted;
+  if (isDeleted) {
+    throw new AppError(httpStatus.FORBIDDEN, 'This user is deleted');
+  }
+  //checking if the user is blocked
+  const userStatus = user?.status;
+  if (userStatus === 'blocked') {
+    throw new AppError(httpStatus.FORBIDDEN, 'This user is Blocked');
+  }
 
   const jwtPayload = {
     userId: user?.id,
     role: user?.role,
   };
 
-  const accessToken = createToken(
+  const refreshToken = createToken(
     jwtPayload,
     config.jwt_access_secret as string,
-    "10m",
+    '10m',
   );
 
-
-
-const resetLink = `http//:localhost:3000?id=${user?.id}&token=${accessToken}`
-
-  return resetLink
+  const resetLink = `${config.reset_pass_uri_link}?id=${user?.id}&token=${refreshToken}`;
+  sendEmail(user.email, resetLink);
+  return resetLink;
 };
 
+const resetPassword = async (
+  payload: { id: string; newPassword: string },
+  token: string,
+) => {
+  // checking if the user is exist
+  const user = await UserModel.isUserExisTByCustomId(payload?.id);
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'This user is not exist');
+  }
 
+  //checking if the user is already deleted
+  const isDeleted = user?.isDeleted;
+  if (isDeleted) {
+    throw new AppError(httpStatus.FORBIDDEN, 'This user is deleted');
+  }
+  //checking if the user is blocked
+  const userStatus = user?.status;
+  if (userStatus === 'blocked') {
+    throw new AppError(httpStatus.FORBIDDEN, 'This user is Blocked');
+  }
+  // checking if the given token valid or not
+  const decoded = jwt.verify(
+    token,
+    config.jwt_access_secret as string,
+  ) as JwtPayload;
+
+  const newHashedPassword = await bcrypt.hash(
+    payload.newPassword,
+    Number(config.bcrypt_salt_rounds),
+  );
+
+  await UserModel.findOneAndUpdate(
+    {
+      id: decoded.userId,
+      role: decoded.role,
+    },
+    {
+      password: newHashedPassword,
+      needsPasswordChange: false,
+      passwordChangedAt: new Date(),
+    },
+  );
+};
 export const AuthServices = {
   loginUser,
   changePassword,
   refreshToken,
   forgotPassword,
+  resetPassword,
 };

@@ -3,6 +3,7 @@ import { USER_ROLES } from './user.constant';
 
 export interface TUser {
   id: string;
+  email: string;
   password: string;
   needsPasswordChange: boolean;
   passwordChangedAt: Date;
@@ -13,10 +14,12 @@ export interface TUser {
 
 export interface UserStaticModel extends Model<TUser> {
   isUserExisTByCustomId(id: string): Promise<TUser>;
+
   isPasswordMatched(
     plainTextPassword: string,
     hashedPassword: string,
   ): Promise<boolean>;
+
   isJWTIssuedBeforePasswordChanged(
     passwordChangedTimestamp: Date,
     jwtIssuedTimestamp: number,

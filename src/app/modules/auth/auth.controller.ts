@@ -35,8 +35,8 @@ const handleChangePassword = catchAsync(async (req, res) => {
   });
 });
 const handleRefreshToken = catchAsync(async (req, res) => {
-    const {refreshToken} =req.cookies
-  const result = await AuthServices.refreshToken(refreshToken)
+  const { refreshToken } = req.cookies;
+  const result = await AuthServices.refreshToken(refreshToken);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -46,12 +46,23 @@ const handleRefreshToken = catchAsync(async (req, res) => {
   });
 });
 const handleForgotPassword = catchAsync(async (req, res) => {
-  const result = await AuthServices.forgotPassword(req.body.id)
+  const result = await AuthServices.forgotPassword(req.body.id);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Access token is retrieved successfully!',
+    data: result,
+  });
+});
+const handleResetPassword = catchAsync(async (req, res) => {
+  const token = req.headers.authorization as string;
+  const result = await AuthServices.resetPassword(req.body, token);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Password reset successful!',
     data: result,
   });
 });
@@ -61,4 +72,5 @@ export const AuthControllers = {
   handleChangePassword,
   handleRefreshToken,
   handleForgotPassword,
+  handleResetPassword,
 };
