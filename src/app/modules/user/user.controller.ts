@@ -1,72 +1,61 @@
-import { NextFunction, Request, Response } from 'express';
 import { UserServices } from './user.service';
 import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';
+import catchAsync from '../../utils/cathAsync';
 
-const handleCreateStudent = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const { password, student: studentData } = req.body;
-    // const zodParsedData = studentValidationSchema.parse(studentData);
+const handleCreateStudent = catchAsync(async (req, res) => {
+   const { password, student: studentData } = req.body;
+   const result = await UserServices.createStudent(password, studentData);
 
-    const result = await UserServices.createStudent(password, studentData);
-
-    sendResponse(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: 'Student is created successfully',
-      data: result,
-    });
-  } catch (err) {
-    next(err);
-  }
-};
-const handelCreateFaculty = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const { password, faculty: facultyData } = req.body;
-    const result = await UserServices.createFaculty(password, facultyData);
-
-    sendResponse(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: 'Faculty is created successfully',
-      data: result,
-    });
-  } catch (err) {
-    next(err);
-  }
-};
-const handelCreateAdmin = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-try {
-  const {password,admin:adminData} = req.body;
-  const result = await UserServices.createAdmin(password,adminData)
-  
-  
-  sendResponse(res,{
-    statusCode:httpStatus.OK,
-    success:true,
-    message:"Admin created successfully",
-    data:result
-  })
-} catch (error) {
-  next(error)
-}
+   sendResponse(res, {
+     statusCode: httpStatus.OK,
+     success: true,
+     message: 'Student is created successfully',
+     data: result,
+   });
+});
 
 
-};
+const handelCreateFaculty = catchAsync(async (req, res) => {
+const { password, faculty: facultyData } = req.body;
+const result = await UserServices.createFaculty(password, facultyData);
+
+sendResponse(res, {
+  statusCode: httpStatus.OK,
+  success: true,
+  message: 'Faculty is created successfully',
+  data: result,
+});
+});
+
+
+const handelCreateAdmin = catchAsync(async (req, res) => {
+  const { password, admin: adminData } = req.body;
+  const result = await UserServices.createAdmin(password, adminData);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Admin created successfully',
+    data: result,
+  });
+});
+
+
+const handleGetMe = catchAsync(async (req, res) => {
+  const { userId, role } = req.user;
+  const result = await UserServices.getMe(userId,role)
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: `${role} retrieves successful!`,
+    data: result,
+  });
+});
 export const UserControllers = {
   handleCreateStudent,
   handelCreateFaculty,
-  handelCreateAdmin
+  handelCreateAdmin,
+  handleGetMe,
 };
