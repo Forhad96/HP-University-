@@ -12,13 +12,13 @@ const router = Router();
 
 router.post(
   '/create-student',
-  auth(USER_ROLES.admin),
+  auth(USER_ROLES.admin,USER_ROLES.superAdmin),
   upload.single('file'),
   ((req:Request,res:Response,next:NextFunction)=>{
 req.body = JSON.parse(req.body.data)
 next()
   }),
-  // validateRequest(createStudentValidationSchema),
+  validateRequest(createStudentValidationSchema),
   UserControllers.handleCreateStudent,
 );
 router.post(

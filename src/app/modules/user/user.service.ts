@@ -47,6 +47,8 @@ const createStudent = async (file:any,password: string, payload: TStudent) => {
     throw new AppError(httpStatus.NOT_FOUND, 'Academic department not found');
   }
 
+  payload.academicFaculty = academicDepartment?.academicFaculty
+
   const session = await mongoose.startSession();
   try {
     session.startTransaction();
