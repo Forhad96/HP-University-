@@ -46,14 +46,14 @@ export type TStudent = {
 
 // custom static instance method
 
-// export interface StudentModel extends Model<TStudent> {
-// isExists(id:string):Promise<TStudent | null>
-// }
+export interface TStudentStaticModel extends Model<TStudent> {
+isExists(id:string):Promise<TStudent | null>
+}
 
 
-//creating custom instance method
-export type StudentMethod = {
-  isExists(id: string): Promise<TStudent | null>;
-};
+//creating custom instance method 
+// export type TStudentCustomModel = {
+//   isExists(id: string): Promise<TStudent | null>;
+// };
 
-export type TStudentModel = Model<TStudent, {}, StudentMethod>;
+// export type TStudentModel = Model<TStudent, {}, StudentMethod>;

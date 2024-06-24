@@ -17,8 +17,13 @@ import { AcademicDepartmentModel } from '../academicDepartment/academicDepartmen
 import { FacultyModel } from '../Faculty/faculty.model';
 import { AdminModel } from '../Admin/admin.model';
 import sendingImageToCloudinary from '../../utils/sendingImageToCloudinary';
+import { TUploadedFile } from '../../interface/uploadFile';
 
-const createStudent = async (file:any,password: string, payload: TStudent) => {
+const createStudent = async (
+  file: TUploadedFile,
+  password: string,
+  payload: TStudent,
+) => {
   // create a user object
   const userData: Partial<TUser> = {};
 
@@ -27,8 +32,8 @@ const createStudent = async (file:any,password: string, payload: TStudent) => {
 
   // set student role
   userData.role = 'student';
-  // set student email 
-  userData.email = payload.email
+  // set student email
+  userData.email = payload.email;
 
   // find academic semester information
   const academicSemester = await academicSemesterModel.findById(
@@ -47,7 +52,7 @@ const createStudent = async (file:any,password: string, payload: TStudent) => {
     throw new AppError(httpStatus.NOT_FOUND, 'Academic department not found');
   }
 
-  payload.academicFaculty = academicDepartment?.academicFaculty
+  payload.academicFaculty = academicDepartment?.academicFaculty;
 
   const session = await mongoose.startSession();
   try {
@@ -56,10 +61,16 @@ const createStudent = async (file:any,password: string, payload: TStudent) => {
     // set generated id
     userData.id = await generateStudentId(academicSemester);
 
-    const imageName = `${userData.id}${payload?.name?.firstName}`
-//send image to cloudinary
-     const {uploadResult} = await sendingImageToCloudinary(imageName, file.path);
-     const imageUrl = uploadResult.secure_url
+    if (file) {
+      const imageName = `${userData.id}${payload?.name?.firstName}`;
+      //send image to cloudinary
+      const { uploadResult } = await sendingImageToCloudinary(
+        imageName,
+        file.path,
+      );
+      const imageUrl = uploadResult.secure_url;
+      payload.profileImg = imageUrl;
+    }
 
     // create a user
     const newUser = await UserModel.create([userData], { session });
@@ -71,8 +82,7 @@ const createStudent = async (file:any,password: string, payload: TStudent) => {
     // set id, _id as user
     payload.id = newUser[0].id;
     payload.user = newUser[0]._id; // reference _id
-    payload.profileImg= imageUrl
-    
+
     const newStudent = await StudentModel.create([payload], { session });
 
     await session.commitTransaction();
@@ -194,33 +204,32 @@ const createAdmin = async (password: string, payload: TFaculty) => {
   }
 };
 
-const getMe = async(userId: string,role:string) => {
-let result = null;
-if (role === 'student') {
-  result = await StudentModel.findOne({ id: userId }).populate('user');
-}
-if (role === 'admin') {
-  result = await AdminModel.findOne({ id: userId }).populate('user');
-}
+const getMe = async (userId: string, role: string) => {
+  let result = null;
+  if (role === 'student') {
+    result = await StudentModel.findOne({ id: userId }).populate('user');
+  }
+  if (role === 'admin') {
+    result = await AdminModel.findOne({ id: userId }).populate('user');
+  }
 
-if (role === 'faculty') {
-  result = await FacultyModel.findOne({ id: userId }).populate('user');
-}
+  if (role === 'faculty') {
+    result = await FacultyModel.findOne({ id: userId }).populate('user');
+  }
 
-return result;
+  return result;
 };
 
-const changeStatus = async (userId:string ,payload:{status:string})=>{
-  console.log(userId,payload);
+const changeStatus = async (userId: string, payload: { status: string }) => {
   const result = await UserModel.findByIdAndUpdate(userId, payload, {
     new: true,
   });
   return result;
-}
+};
 export const UserServices = {
   createStudent,
   createFaculty,
   createAdmin,
   getMe,
-  changeStatus
+  changeStatus,
 };

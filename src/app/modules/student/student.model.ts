@@ -3,7 +3,7 @@ import {
   TGuardian,
   TLocalGuardian,
   TStudent,
-  TStudentModel,
+  TStudentStaticModel,
   TUserName,
 } from './student.interface';
 
@@ -74,7 +74,7 @@ const localGuardianSchema = new Schema<TLocalGuardian>({
   },
 });
 
-const studentSchema = new Schema<TStudent, TStudentModel>(
+const studentSchema = new Schema<TStudent, TStudentStaticModel>(
   {
     id: {
       type: String,
@@ -133,7 +133,7 @@ const studentSchema = new Schema<TStudent, TStudentModel>(
       type: localGuardianSchema,
       required: [true, 'Local guardian information is required'],
     },
-    profileImg: { type: String },
+    profileImg: { type: String,default:"" },
     academicSemester: {
       type: Schema.Types.ObjectId,
       ref: 'AcademicSemester',
@@ -187,7 +187,7 @@ studentSchema.statics.isUserExists = async function (id: string) {
 
 
 
-export const StudentModel = model<TStudent, TStudentModel>(
+export const StudentModel = model<TStudent, TStudentStaticModel>(
   'Student',
   studentSchema,
 );
